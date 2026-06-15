@@ -23,7 +23,8 @@ title: 청년ON 작업기록서
 
 ---
 
-## 2차 — 챗봇 UX 개선 `feature/chatbot-ux`
+<details open markdown="1">
+<summary style="cursor:pointer;font-size:1.3em;font-weight:700;padding:6px 0;">🟢 2차 — 챗봇 UX 개선 <code>feature/chatbot-ux</code> · 검토 대기</summary>
 
 > 2026.06.15 회의 배정. 챗봇을 "한 번 묻고 끝"이 아니라 **계속 쓰게** 만드는 작업.
 
@@ -54,9 +55,12 @@ title: 청년ON 작업기록서
 | **연관질문 칩**(답변 아래 버튼) | **대화 목록** 드로어(저장·이어가기) |
 | ![연관질문 칩과 카드 슬라이더](assets/03-followup-slider.png) | ![대화 목록 드로어](assets/04-drawer.png) |
 
+</details>
+
 ---
 
-## 1차 — AI 챗봇 + 관리자 페이지 `feature/chatbot-admin`
+<details markdown="1">
+<summary style="cursor:pointer;font-size:1.3em;font-weight:700;padding:6px 0;">✅ 1차 — AI 챗봇 + 관리자 페이지 <code>feature/chatbot-admin</code> · main 병합 완료 (펼쳐보기)</summary>
 
 > 2026.06.10 회의 결론 *"정책 비교 기능을 따로 만들기보다 챗봇이 비교·추천하게 하자"* 를 구현. main 병합되어 현재 라이브 운영 중.
 
@@ -72,9 +76,12 @@ title: 청년ON 작업기록서
 - 무료 LLM 사용(기본 모델 + 자동 폴백 교체)으로 운영비 0원 목표.
 - 사용 기록을 Google Sheets에 자동 적재 → 관리자 페이지에서 집계.
 
+</details>
+
 ---
 
-## 📎 챗봇 모듈 구성 (참고)
+<details markdown="1">
+<summary style="cursor:pointer;font-size:1.3em;font-weight:700;padding:6px 0;">📎 챗봇 모듈 구성 (참고 · 펼쳐보기)</summary>
 
 `src/chatbot/` 폴더 = 챗봇 기능 전체.
 
@@ -95,6 +102,8 @@ ChatBotView: 스트리밍 표시 + 정책카드 + 연관질문 칩 + 대화 loca
 ```
 
 > ⚠️ 대화는 로그인 전이라 브라우저에 평문 저장됩니다. 공용 PC에서는 "전체 대화 삭제"로 정리하세요.
+
+</details>
 
 ---
 
