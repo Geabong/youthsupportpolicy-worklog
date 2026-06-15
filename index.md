@@ -46,7 +46,13 @@ title: 청년ON 작업기록서
 - **디바운스 자동저장**: 입력 멈춘 뒤 0.6초에 저장, 스트리밍 중엔 저장 안 함.
 - **변경 파일**: `ChatBotView.jsx`, `PolicyCardMini.jsx`, `chatStore.js`(신규).
 
-<!-- SCREENSHOT-UX -->
+### 📸 화면
+
+| 대화 시작 (상단 `☰ 대화목록`·`＋ 새 대화`) | AI 답변 + 정책 카드(가로 슬라이더·색상) |
+|:---:|:---:|
+| ![챗봇 홈 화면](assets/01-chatbot-home.png) | ![AI 답변과 정책 카드](assets/02-answer-cards.png) |
+| **연관질문 칩**(답변 아래 버튼) | **대화 목록** 드로어(저장·이어가기) |
+| ![연관질문 칩과 카드 슬라이더](assets/03-followup-slider.png) | ![대화 목록 드로어](assets/04-drawer.png) |
 
 ---
 
@@ -65,8 +71,6 @@ title: 청년ON 작업기록서
 ### 기술 포인트
 - 무료 LLM 사용(기본 모델 + 자동 폴백 교체)으로 운영비 0원 목표.
 - 사용 기록을 Google Sheets에 자동 적재 → 관리자 페이지에서 집계.
-
-<!-- SCREENSHOT-ADMIN -->
 
 ---
 
