@@ -2,6 +2,38 @@
 title: 청년ON 작업기록서
 ---
 
+<style>
+/* ===== 다크모드 ===== */
+body { background:#0d1117 !important; color:#c9d1d9 !important; }
+.page-header { background:#161b22 !important; background-image:linear-gradient(120deg,#0d2b4e,#0a3d2e) !important; border-bottom:1px solid #30363d; }
+.main-content { color:#c9d1d9 !important; }
+.main-content h1,.main-content h2,.main-content h3,.main-content h4,.main-content strong { color:#f0f6fc !important; }
+.main-content a { color:#58a6ff !important; }
+.main-content hr { background-color:#30363d !important; }
+.main-content blockquote { color:#8b949e !important; border-left-color:#30363d !important; }
+.main-content code { background:#161b22 !important; color:#79c0ff !important; border:1px solid #30363d; }
+.main-content pre { background:#161b22 !important; border:1px solid #30363d; }
+.main-content pre code { background:transparent !important; border:none; color:#c9d1d9 !important; }
+.main-content table th,.main-content table td { border:1px solid #30363d !important; color:#c9d1d9 !important; }
+.main-content table th { background:#161b22 !important; }
+.main-content table tr { background:#0d1117 !important; border-top:1px solid #30363d; }
+.main-content table tr:nth-child(2n) { background:#161b22 !important; }
+.main-content img { border-radius:10px; border:1px solid #30363d; }
+
+/* ===== 접기/펼치기 토글 ===== */
+details { border:1px solid #30363d; border-radius:12px; background:#161b22; margin:18px 0; padding:0 18px; transition:border-color .2s ease; }
+details:hover { border-color:#3d8bff55; }
+details[open] { background:#10151c; }
+summary { list-style:none; cursor:pointer; display:flex; align-items:center; gap:10px; padding:16px 0; user-select:none; }
+summary::-webkit-details-marker { display:none; }
+summary::before { content:"▶"; font-size:.75em; color:#58a6ff; transition:transform .25s ease; flex:0 0 auto; }
+details[open] > summary::before { transform:rotate(90deg); }
+details[open] > summary { border-bottom:1px solid #30363d; margin-bottom:10px; }
+/* 펼칠 때 부드럽게 등장 */
+details[open] > *:not(summary) { animation:revealDown .3s ease; }
+@keyframes revealDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+</style>
+
 # 🛠️ 청년ON 작업기록서
 
 > **임종권** — AI 챗봇 · API · 관리자 페이지 담당
@@ -24,7 +56,7 @@ title: 청년ON 작업기록서
 ---
 
 <details open markdown="1">
-<summary style="cursor:pointer;font-size:1.3em;font-weight:700;padding:6px 0;">🟢 2차 — 챗봇 UX 개선 <code>feature/chatbot-ux</code> · 검토 대기</summary>
+<summary style="font-size:1.2em;font-weight:700;">🟢 2차 — 챗봇 UX 개선 <code>feature/chatbot-ux</code> · 검토 대기</summary>
 
 > 2026.06.15 회의 배정. 챗봇을 "한 번 묻고 끝"이 아니라 **계속 쓰게** 만드는 작업.
 
@@ -60,7 +92,7 @@ title: 청년ON 작업기록서
 ---
 
 <details markdown="1">
-<summary style="cursor:pointer;font-size:1.3em;font-weight:700;padding:6px 0;">✅ 1차 — AI 챗봇 + 관리자 페이지 <code>feature/chatbot-admin</code> · main 병합 완료 (펼쳐보기)</summary>
+<summary style="font-size:1.2em;font-weight:700;">✅ 1차 — AI 챗봇 + 관리자 페이지 <code>feature/chatbot-admin</code> · main 병합 완료 (펼쳐보기)</summary>
 
 > 2026.06.10 회의 결론 *"정책 비교 기능을 따로 만들기보다 챗봇이 비교·추천하게 하자"* 를 구현. main 병합되어 현재 라이브 운영 중.
 
@@ -81,7 +113,7 @@ title: 청년ON 작업기록서
 ---
 
 <details markdown="1">
-<summary style="cursor:pointer;font-size:1.3em;font-weight:700;padding:6px 0;">📎 챗봇 모듈 구성 (참고 · 펼쳐보기)</summary>
+<summary style="font-size:1.2em;font-weight:700;">📎 챗봇 모듈 구성 (참고 · 펼쳐보기)</summary>
 
 `src/chatbot/` 폴더 = 챗봇 기능 전체.
 
