@@ -50,7 +50,7 @@ details[open] > *:not(summary) { animation:revealDown .3s ease; }
 
 | 차수 | 브랜치 | 한 일 | 상태 |
 |------|--------|-------|------|
-| **2차** | `feature/chatbot-ux` | 대화 저장·이어가기 · 연관질문 칩 · 정책카드 가로 슬라이더 | 검토 대기 |
+| **2차** | `feature/chatbot-ux` | 대화 저장·이어가기 · 연관질문 칩 · 정책카드 슬라이더 · 관리자 로그인·AI 사용량 | 검토 대기 |
 | **1차** | `feature/chatbot-admin` | AI 챗봇 · 관리자 페이지 · 실시간 스트리밍 · 정책 자동선별 | main 병합 완료 ✅ |
 
 ---
@@ -74,10 +74,24 @@ details[open] > *:not(summary) { animation:revealDown .3s ease; }
 - 세로로 쌓이던 카드를 **가로 스크롤(scroll-snap)** 로 변경 → 모바일에서 밀어보기 편함.
 - 카테고리별 컬러바(주거·취업·교육 등)를 추가해 한눈에 구분.
 
+### ④ 정책카드 가독성 개선
+- 지원내용(`fmtSupport`) 줄바꿈 포맷팅: `·`, `- `, 번호 등 패턴 자동 줄바꿈.
+- 3줄 넘으면 **"더보기"** 토글로 접기/펼치기.
+
+### ⑤ 관리자 로그인 게이트
+- 관리자 페이지 진입 시 데모 로그인(admin / 1234) 요구.
+- 노란 안내 박스에 데모 계정임을 명시, 실제 서비스에서는 보안 인증 적용 예정 고지.
+
+### ⑥ AI 사용량 모니터링 (관리자 06번 메뉴)
+- 사이드바 06번 메뉴로 추가. Vercel `/api/usage` 엔드포인트 연동.
+- KPI 카드 4개(오늘 요청·토큰·남은 답변·누적), 프로그레스바(사용률 색상 변화), 모델별 테이블.
+- Google Sheets 전체 기록 바로가기 링크.
+
 ### 기술 포인트
 - **스트리밍 레이스 가드**: 답변 받는 중 다른 대화로 전환해도 엉뚱한 세션에 글자가 안 섞이도록 요청 세션 ID 대조.
 - **디바운스 자동저장**: 입력 멈춘 뒤 0.6초에 저장, 스트리밍 중엔 저장 안 함.
-- **변경 파일**: `ChatBotView.jsx`, `PolicyCardMini.jsx`, `chatStore.js`(신규).
+- **2단계 인증 구조**: 데모 로그인(admin/1234)으로 관리자 진입, API 사용량은 별도 ADMIN_PASSWORD 확인.
+- **변경 파일**: `ChatBotView.jsx`, `PolicyCardMini.jsx`, `chatStore.js`(신규), `AdminShell.jsx`, `AiUsagePage.jsx`(신규), `MainContent.jsx`.
 
 ### 📸 화면
 
