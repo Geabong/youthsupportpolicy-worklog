@@ -48,17 +48,98 @@ details[open] > *:not(summary) { animation:revealDown .3s ease; }
 
 ## 📌 작업 한눈에 보기
 
-| 차수 | 브랜치 | 한 일 | 상태 |
+| 차수 | 브랜치 / 위치 | 한 일 | 상태 |
 |------|--------|-------|------|
+| **3차** | Apps Script · `api/chat.js` | 자동 QA(30분) + 대화분석(3시간) + 동적 시스템 프롬프트 — 셀프 개선 루프 | 운영 중 ✅ |
 | **2차** | `feature/chatbot-ux` | 대화 저장·이어가기 · 연관질문 칩 · 정책카드 슬라이더 · 관리자 로그인·AI 사용량 | 검토 대기 |
 | **1차** | `feature/chatbot-admin` | AI 챗봇 · 관리자 페이지 · 실시간 스트리밍 · 정책 자동선별 | main 병합 완료 ✅ |
 
 ---
 
 <details open markdown="1">
-<summary style="font-size:1.2em;font-weight:700;">🟢 2차 — 챗봇 UX 개선 <code>feature/chatbot-ux</code> · 검토 대기</summary>
+<summary style="font-size:1.2em;font-weight:700;">🔄 3차 — 대화내역 고도화 파이프라인 · Apps Script + <code>api/chat.js</code> · 운영 중</summary>
+
+> 2026.06.17 구축. 챗봇이 **스스로 대화를 분석하고 개선하는 자동 루프**. 사람 개입 없이 품질이 올라감.
+
+### 전체 구조
+
+```
+┌─ 30분마다: runQA() ─────────────────────────────┐
+│  OpenRouter 무료 모델로 테스트 질문 2개 동적 생성    │
+│  → 챗봇 API에 x-qa-bot 헤더로 전송                │
+│  → 구글시트 로그 탭에 🤖[자동QA]로 자동 기록        │
+└─────────────────────────────────────────────────┘
+         ↓ 로그 축적
+┌─ 3시간마다: analyzeChatLogs() ──────────────────┐
+│  최근 100건 대화(실제 사용자 + QA봇) 분석           │
+│  → 자주 묻는 질문, 답변 품질, 개선점 도출           │
+│  → settings 탭 chatInstructions 키에 저장          │
+└─────────────────────────────────────────────────┘
+         ↓ 개선 지시사항 반영
+┌─ 매 요청: api/chat.js ─────────────────────────┐
+│  getSettings()로 chatInstructions 읽기            │
+│  → 시스템 프롬프트 끝에 "운영자 추가 지시" 동적 추가  │
+│  → 개선된 답변 → 다음 QA에서 또 테스트              │
+└─────────────────────────────────────────────────┘
+```
+
+### ① 자동 QA 봇 — `runQA()`
+
+- **30분 간격** 시간 트리거로 자동 실행
+- OpenRouter `openrouter/auto` (무료 모델)에게 질문 2개 생성 요청
+- 생성 조건: 다양한 나이(19~34), 지역, 관심분야(취업/주거/교육/창업/복지) 랜덤 조합
+- 엣지케이스 포함: 가끔 나이·지역을 빠뜨린 질문도 생성
+- 출력 형식: JSON 배열 `["질문1", "질문2"]` — `indexOf('[')` + `JSON.parse()`로 파싱 (정규식 없음)
+- 생성된 질문을 챗봇 API(`/api/chat`)에 `x-qa-bot: 1` 헤더와 함께 POST
+- 백엔드가 이 헤더를 감지하면 질문 앞에 `🤖[자동QA]`를 붙여 구글시트에 기록
+- 실제 사용자 로그와 QA 로그가 같은 시트에 쌓여, 분석 시 둘 다 활용됨
+
+### ② 대화 로그 분석 — `analyzeChatLogs()`
+
+- **3시간 간격** 시간 트리거로 자동 실행
+- 로그 탭에서 최근 100건의 D열(질문) + E열(답변) 읽기
+- OpenRouter에 분석 요청: 5가지 관점
+  1. 사용자가 자주 묻는데 챗봇이 잘 못 대응하는 패턴
+  2. 답변 톤·형식 개선점
+  3. 사용자가 기대하지만 제공 못 하는 정보
+  4. 반복되는 오해·혼란 패턴
+  5. QA봇 질문 vs 실제 사용자 질문의 답변 품질 차이
+- 분석 결과를 500자 이내 지시문으로 생성 → `settings` 탭 `chatInstructions`에 upsert
+- `chatInstructionsUpdated`에 업데이트 시각도 함께 기록
+
+### ③ 동적 시스템 프롬프트 — `api/chat.js`
+
+- 매 챗봇 요청마다 `lib/settings.js`의 `getSettings()`를 호출
+- 구글시트 settings 탭을 gviz CSV 엔드포인트로 읽어 `chatInstructions` 값 추출
+- 기존 고정 시스템 프롬프트 뒤에 `--- 운영자 추가 지시 ---` 섹션으로 동적 삽입
+- 변수명: `dynamicSystem` (커밋 `49fc2d8`)
+
+### ④ 구글시트 settings 탭
+
+- 시트 ID: `1vKSirUpGTuvFy40Hf5y9l_vOp5aNtRFuuC8jTfFpKfs`의 "settings" 탭
+- 컬럼: `키 | 값 | 수정시각`
+- 주요 키:
+  - `chatInstructions` — AI가 생성한 챗봇 개선 지시사항 (최대 500자)
+  - `chatInstructionsUpdated` — 마지막 분석 시각 (KST)
+
+### 기술 포인트
+
+- **완전 자동 루프**: QA 질문 생성 → 챗봇 테스트 → 로그 축적 → AI 분석 → 시스템 프롬프트 개선 → 더 나은 답변 → 다음 QA 사이클
+- **비용 0원**: OpenRouter 무료 모델(`openrouter/auto`) + Google Apps Script 무료 트리거
+- **QA/실사용자 구분**: `🤖[자동QA]` 태그로 로그에서 명확히 분리, 분석 시 실제 사용자 패턴 우선
+- **정규식 미사용**: JSON 파싱에 `indexOf`/`lastIndexOf` + `JSON.parse`만 사용 (안정성 확보)
+- **변경 파일**: `sheet-debug-logger.gs`(Apps Script, 버전 13), `api/chat.js`(동적 프롬프트), `lib/settings.js`(설정 읽기)
+- **트리거 설치**: `setupAutoTriggers()` 수동 1회 실행으로 완료 (2026-06-17)
+
+</details>
+
+---
+
+<details markdown="1">
+<summary style="font-size:1.2em;font-weight:700;">🟢 2차 — 챗봇 UX 개선 <code>feature/chatbot-ux</code> · 검토 대기 (펼쳐보기)</summary>
 
 > 2026.06.15 회의 배정. 챗봇을 "한 번 묻고 끝"이 아니라 **계속 쓰게** 만드는 작업.
+> 아래 내용은 `feature/main-design-preview` 브랜치에 구현, 프리뷰 배포 완료.
 
 ### ① 대화 저장 + 이어서 채팅
 - 새로고침해도 마지막 대화가 복원됩니다. AI도 이전 맥락(`apiHistory`)을 기억해 이어서 답합니다.
