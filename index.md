@@ -42,7 +42,7 @@ details[open] > *:not(summary) { animation:revealDown .3s ease; }
 
 - 🔗 서비스(라이브): <https://yoon-kyoung.github.io/youthsupportpolicy/>
 - 🔗 팀 저장소: <https://github.com/yoon-kyoung/youthsupportpolicy>
-- 🔗 챗봇 백엔드(별도 레포): `youth-chatbot-api` (Vercel 배포)
+- 🔗 챗봇 백엔드(별도 레포): `team-ghpages-deploy` (Vercel 배포)
 
 ---
 
@@ -197,7 +197,7 @@ details[open] > *:not(summary) { animation:revealDown .3s ease; }
 - **AI 직접 정책 선별**: 응답 첫 줄 `[POLICY_IDS:]` 태그를 파싱해 정확한 정책 카드 매칭(최대 4개, 지역까지 정확히).
 - **청년센터 폴백**: 추천할 정책이 없는 지역이면 지어내지 않고, 그 지역 청년센터(이름·전화)를 안내(전국 246곳 실데이터).
 - **관리자 페이지**: 오늘 챗봇 사용 횟수·비용·모델별 통계 확인(비밀번호 보호).
-- **백엔드 분리**: 챗봇 서버는 별도 레포 `youth-chatbot-api`(Vercel). 프론트는 그 백엔드를 호출만 함.
+- **백엔드 분리**: 챗봇 서버는 별도 레포 `team-ghpages-deploy`(Vercel). 프론트는 그 백엔드를 호출만 함.
 
 ### 기술 포인트
 - 무료 LLM 사용(기본 모델 + 자동 폴백 교체)으로 운영비 0원 목표.
@@ -224,7 +224,7 @@ details[open] > *:not(summary) { animation:revealDown .3s ease; }
 **동작 흐름**
 ```
 사용자 입력 → ChatBotView → POST {API_BASE}/api/chat (스트리밍)
-  └ 백엔드(youth-chatbot-api)가 무료 LLM으로 응답 + X-Policy-Ids 헤더
+  └ 백엔드(team-ghpages-deploy)가 LLM으로 응답 + X-Policy-Ids 헤더
 ChatBotView: 스트리밍 표시 + 정책카드 + 연관질문 칩 + 대화 localStorage 저장
 ```
 
